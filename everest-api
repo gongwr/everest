@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+# PBR Generated from 'console_scripts'
+
+import sys
+
+from everest.cmd.api import main
+
+if __name__ == '__main__':
+    sys.exit(main())
