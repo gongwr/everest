@@ -26,3 +26,4 @@ testtools~=2.6.0
 uvicorn~=0.22.0
 WebOb~=1.8.7
 wheel==0.40.0
+cryptography~=41.0.1
