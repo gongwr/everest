@@ -38,7 +38,7 @@ def _add_local_user_table():
         Column('failed_auth_count', Integer, nullable=True),
         Column('failed_auth_at', DateTime(), nullable=True),
         ForeignKeyConstraint(
-            ["user_id", "domain_id"],
+            ("user_id", "domain_id"),
             ['user.id', 'user.domain_id'],
             name='local_user_user_id_fkey',
             onupdate='CASCADE',
@@ -54,7 +54,8 @@ def _add_password_table():
     op.create_table(
         'password',
         Column('id', Integer(), primary_key=True, nullable=False),
-        Column('local_user_id', Integer(), ForeignKey('local_user.id', ondelete='CASCADE'), nullable=False),
+        Column('local_user_id', Integer(), ForeignKey('local_user.id', ondelete='CASCADE'),
+               nullable=False),
         Column('expires_at', DateTime(), nullable=True),
         Column('self_service', Boolean(), nullable=False, server_default='0', default=False),
         # NOTE(notmorgan): To support the full range of scrypt and pbkfd
@@ -71,14 +72,15 @@ def _add_federated_user_table():
     op.create_table(
         'federated_user',
         Column('id', Integer, primary_key=True, nullable=False),
-        Column('user_id', String(length=64), ForeignKey('user.id', ondelete='CASCADE'), nullable=False),
+        Column('user_id', String(length=64), ForeignKey('user.id', ondelete='CASCADE'),
+               nullable=False),
         Column('idp_id', String(length=64), ForeignKey('identity_provider.id', ondelete='CASCADE'),
                nullable=False),
         Column('protocol_id', String(length=64), nullable=False),
         Column('unique_id', String(length=255), nullable=False),
         Column('display_name', String(length=255), nullable=True),
         ForeignKeyConstraint(
-            ['protocol_id', 'idp_id'],
+            ('protocol_id', 'idp_id'),
             ['federation_protocol.id', 'federation_protocol.idp_id'],
             name='federated_user_protocol_id_fkey',
             ondelete='CASCADE',
@@ -96,7 +98,7 @@ def _add_nonlocal_users_table():
         Column('name', String(length=255), primary_key=True),
         Column('user_id', String(length=64), nullable=False),
         ForeignKeyConstraint(
-            ['user_id', 'domain_id'],
+            ('user_id', 'domain_id'),
             ['user.id', 'user.domain_id'],
             name='nonlocal_user_user_id_fkey',
             onupdate='CASCADE',
@@ -129,9 +131,11 @@ def _add_group_table():
 def _add_user_group_membership_table():
     op.create_table(
         'user_group_membership',
-        Column('user_id', String(length=64), ForeignKey('user.id', name='fk_user_group_membership_user_id'),
+        Column('user_id', String(length=64),
+               ForeignKey('user.id', name='fk_user_group_membership_user_id'),
                primary_key=True),
-        Column('group_id', String(length=64), ForeignKey('group.id', name='fk_user_group_membership_group_id'),
+        Column('group_id', String(length=64),
+               ForeignKey('group.id', name='fk_user_group_membership_group_id'),
                primary_key=True),
         # NOTE(stevemar): The index was named 'group_id' in
         # 050_fk_consistent_indexes.py and needs to be preserved
@@ -146,7 +150,8 @@ def _add_expiring_user_group_membership_table():
         'expiring_user_group_membership',
         Column('user_id', String(length=64), ForeignKey('user.id'), primary_key=True),
         Column('group_id', String(length=64), ForeignKey('group.id'), primary_key=True),
-        Column('idp_id', String(length=64), ForeignKey('identity_provider.id', ondelete='CASCADE'), primary_key=True),
+        Column('idp_id', String(length=64), ForeignKey('identity_provider.id', ondelete='CASCADE'),
+               primary_key=True),
         Column('last_verified', DateTime(), nullable=False),
         mysql_engine='InnoDB',
         mysql_charset='utf8',
@@ -156,7 +161,8 @@ def _add_expiring_user_group_membership_table():
 def _add_user_option_table():
     op.create_table(
         'user_option',
-        Column('user_id', String(length=64), ForeignKey('user.id', ondelete='CASCADE'), nullable=False,
+        Column('user_id', String(length=64), ForeignKey('user.id', ondelete='CASCADE'),
+               nullable=False,
                primary_key=True),
         Column('option_id', String(length=4), nullable=False, primary_key=True),
         Column('option_value', JSONEncodedDict(), nullable=True),
@@ -175,6 +181,3 @@ def upgrade():
     _add_nonlocal_users_table()
     _add_password_table()
     _add_federated_user_table()
-
-
-

@@ -47,6 +47,9 @@ def get_all(context, namespace_name, session, filters=None, marker=None,
             limit=None, sort_key='created_at', sort_dir='desc'):
     """Get all tags that match zero or more filters.
 
+    :param session:
+    :param context:
+    :param namespace_name:
     :param filters: dict of filter keys and values.
     :param marker: tag id after which to start page
     :param limit: maximum number of namespaces to return
@@ -172,8 +175,8 @@ def delete_namespace_content(context, namespace_id, session):
     """Use this def only if the ns for the id has been verified as visible"""
     query = (session.query(models.MetadefTag).filter_by(
         namespace_id=namespace_id))
-    count = query.delete(synchronize_session='fetch')
-    return count
+    count1 = query.delete(synchronize_session='fetch')
+    return count1
 
 
 def delete_by_namespace_name(context, namespace_name, session):

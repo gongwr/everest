@@ -561,7 +561,6 @@ def nested_contexts(*contexts):
         yield [stack.enter_context(c) for c in contexts]
 
 
-
 def chunkreadable(iter, chunk_size=65536):
     """
     Wrap a readable iterator with a reader yielding chunks of
@@ -647,28 +646,6 @@ def mutating(func):
     return wrapped
 
 
-def setup_remote_pydev_debug(host, port):
-    error_msg = ('Error setting up the debug environment. Verify that the'
-                 ' option pydev_worker_debug_host is pointing to a valid '
-                 'hostname or IP on which a pydev server is listening on'
-                 ' the port indicated by pydev_worker_debug_port.')
-
-    try:
-        try:
-            from pydev import pydevd
-        except ImportError:
-            import pydevd
-
-        pydevd.settrace(host,
-                        port=port,
-                        stdoutToServer=True,
-                        stderrToServer=True)
-        return True
-    except Exception:
-        with excutils.save_and_reraise_exception():
-            LOG.exception(error_msg)
-
-
 def is_valid_hostname(hostname):
     """Verify whether a hostname (not an FQDN) is valid."""
     return re.match('^[a-zA-Z0-9-]+$', hostname) is not None
@@ -715,7 +692,7 @@ def parse_valid_host_port(host_port):
                            'separately from the port (i.e., '
                            '"[fe80::a:b:c]:9876").') % ex)
 
-    return (host, int(port))
+    return host, int(port)
 
 
 try:

@@ -282,7 +282,7 @@ class LocalUser(ModelBase, ModelDictMixin):
     __table_args__ = (
         UniqueConstraint('user_id'),
         UniqueConstraint('domain_id', 'name'),
-        ForeignKeyConstraint(['user_id', 'domain_id'],
+        ForeignKeyConstraint(('user_id', 'domain_id'),
                              ['user.id', 'user.domain_id'],
                              onupdate='CASCADE', ondelete='CASCADE')
     )
@@ -346,7 +346,7 @@ class FederatedUser(ModelBase, ModelDictMixin):
     display_name = Column(String(255), nullable=True)
     __table_args__ = (
         UniqueConstraint('idp_id', 'protocol_id', 'unique_id'),
-        ForeignKeyConstraint(['protocol_id', 'idp_id'],
+        ForeignKeyConstraint(('protocol_id', 'idp_id'),
                              ['federation_protocol.id',
                               'federation_protocol.idp_id'],
                              ondelete='CASCADE')
@@ -364,7 +364,7 @@ class NonLocalUser(ModelBase, ModelDictMixin):
     __table_args__ = (
         UniqueConstraint('user_id'),
         ForeignKeyConstraint(
-            ['user_id', 'domain_id'], ['user.id', 'user.domain_id'],
+            ('user_id', 'domain_id'), ['user.id', 'user.domain_id'],
             onupdate='CASCADE', ondelete='CASCADE'),)
 
 

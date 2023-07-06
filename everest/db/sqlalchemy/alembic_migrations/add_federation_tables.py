@@ -59,7 +59,8 @@ def _add_federation_protocol_table():
     op.create_table(
         'federation_protocol',
         Column('id', String(length=64), primary_key=True),
-        Column('idp_id', String(length=64), ForeignKey('identity_provider.id', ondelete='CASCADE'), primary_key=True),
+        Column('idp_id', String(length=64), ForeignKey('identity_provider.id', ondelete='CASCADE'),
+               primary_key=True),
         Column('mapping_id', String(length=64), nullable=False),
         Column('remote_id_attribute', String(length=64)),
         mysql_engine='InnoDB',

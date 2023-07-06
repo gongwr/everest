@@ -645,3 +645,31 @@ class UnexpectedError(SecurityError):
 
     code = int(http.client.INTERNAL_SERVER_ERROR)
     title = http.client.responses[http.client.INTERNAL_SERVER_ERROR]
+
+
+class ValidationTimeStampError(Error):
+    message_format = _("Timestamp not in expected format."
+                       " The server could not comply with the request"
+                       " since it is either malformed or otherwise"
+                       " incorrect. The client is assumed to be in error.")
+    code = int(http.client.BAD_REQUEST)
+    title = http.client.responses[http.client.BAD_REQUEST]
+
+
+class ValidationExpirationError(Error):
+    message_format = _("The 'expires_at' must not be before now."
+                       " The server could not comply with the request"
+                       " since it is either malformed or otherwise"
+                       " incorrect. The client is assumed to be in error.")
+    code = int(http.client.BAD_REQUEST)
+    title = http.client.responses[http.client.BAD_REQUEST]
+
+
+class MalformedEndpoint(UnexpectedError):
+    debug_message_format = _("Malformed endpoint URL (%(endpoint)s),"
+                             " see ERROR log for details.")
+
+
+class URLValidationError(ValidationError):
+    message_format = _("Cannot create an endpoint with an invalid URL:"
+                       " %(url)s.")
